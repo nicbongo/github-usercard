@@ -2,7 +2,8 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-
+axios.get("https://api.github.com/users/nicbongo")
+ 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -13,6 +14,16 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+.then(response => {
+  console.log(response);
+  // response.data.forEach(user => {
+    const newUser = userCreator(response);
+    cardContainer.appendChild(newUser);
+  // });
+})
+.catch (error => {
+  console.log(error);
+});
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -25,6 +36,56 @@
 */
 
 const followersArray = [];
+
+function userCreator (object) {
+  // create elements
+  const dataCard = document.createElement("div"),
+        dataImg = document.createElement("img"),
+        dataInfo = document.createElement("div"),
+        dataName = document.createElement("h3"),
+        dataUserName = document.createElement("p"),
+        dataLocation = document.createElement("p"),
+        dataProfile = document.createElement("p"),
+        dataProfLink = document.createElement("a"),
+        dataFollowers = document.createElement("p"),
+        dataFollowing = document.createElement("p"),
+        dataBio = document.createElement("p");
+
+  // append
+  dataCard.appendChild(dataImg);
+  dataCard.appendChild(dataInfo);
+  dataInfo.appendChild(dataName);
+  dataInfo.appendChild(dataUserName);
+  dataInfo.appendChild(dataLocation);
+  dataInfo.appendChild(dataProfile);
+    dataProfile.appendChild(dataProfLink);
+  dataInfo.appendChild(dataFollowers);
+  dataInfo.appendChild(dataFollowing);
+  dataInfo.appendChild(dataBio);
+
+  // classes
+  dataCard.classList.add("card");
+  dataInfo.classList.add("card-info");
+  dataName.classList.add("name");
+  dataUserName.classList.add("username");
+
+  //text content
+  dataImg.scr = object.data.avatar_url;
+  dataName.textContent = object.data.name;
+  dataUserName.textContent = object.data.login;
+  dataLocation.textContent = `Location: ${object.data.location}`;
+  dataUserName.textContent = object.data.login;
+  dataProfile.textContent = `Profile: ${dataProfLink}`;
+  dataProfLink.innerContent = `${object.data.html_url}`
+  dataFollowers.textContent = `Followers: ${object.data.followers}`;
+  dataFollowing.textContent = `Following: ${object.data.following}`;
+  dataBio.textContent = `Bio: ${object.data.bio}`;
+
+  return dataCard
+}
+
+const cardContainer = document.querySelector(".cards");
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
