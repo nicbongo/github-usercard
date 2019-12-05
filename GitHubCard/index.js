@@ -16,10 +16,10 @@ axios.get("https://api.github.com/users/nicbongo")
 */
 .then(response => {
   console.log(response);
-  // response.data.forEach(user => {
+  
     const newUser = userCreator(response);
     cardContainer.appendChild(newUser);
-  // });
+  
 })
 .catch (error => {
   console.log(error);
@@ -35,7 +35,6 @@ axios.get("https://api.github.com/users/nicbongo")
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 function userCreator (object) {
   // create elements
@@ -49,20 +48,8 @@ function userCreator (object) {
         dataProfLink = document.createElement("a"),
         dataFollowers = document.createElement("p"),
         dataFollowing = document.createElement("p"),
-        dataBio = document.createElement("p");
-
-  // append
-  dataCard.appendChild(dataImg);
-  dataCard.appendChild(dataInfo);
-  dataInfo.appendChild(dataName);
-  dataInfo.appendChild(dataUserName);
-  dataInfo.appendChild(dataLocation);
-  dataInfo.appendChild(dataProfile);
-    dataProfile.appendChild(dataProfLink);
-  dataInfo.appendChild(dataFollowers);
-  dataInfo.appendChild(dataFollowing);
-  dataInfo.appendChild(dataBio);
-
+        dataBio = document.createElement("p"); 
+    
   // classes
   dataCard.classList.add("card");
   dataInfo.classList.add("card-info");
@@ -70,16 +57,29 @@ function userCreator (object) {
   dataUserName.classList.add("username");
 
   //text content
-  dataImg.scr = object.data.avatar_url;
+  dataImg.src = object.data.avatar_url;
   dataName.textContent = object.data.name;
   dataUserName.textContent = object.data.login;
   dataLocation.textContent = `Location: ${object.data.location}`;
   dataUserName.textContent = object.data.login;
-  dataProfile.textContent = `Profile: ${dataProfLink}`;
-  dataProfLink.innerContent = `${object.data.html_url}`
+  dataProfLink.href = object.data.html_url;
+  dataProfLink.textContent = object.data.html_url;
+  dataProfile.textContent = `Profile: `;
   dataFollowers.textContent = `Followers: ${object.data.followers}`;
   dataFollowing.textContent = `Following: ${object.data.following}`;
   dataBio.textContent = `Bio: ${object.data.bio}`;
+
+  // append
+  dataProfile.appendChild(dataProfLink);
+  dataInfo.appendChild(dataName);
+  dataInfo.appendChild(dataUserName);
+  dataInfo.appendChild(dataLocation);
+  dataInfo.appendChild(dataProfile);
+  dataInfo.appendChild(dataFollowers);
+  dataInfo.appendChild(dataFollowing);
+  dataInfo.appendChild(dataBio);
+  dataCard.appendChild(dataImg);
+  dataCard.appendChild(dataInfo);
 
   return dataCard
 }
@@ -114,3 +114,25 @@ const cardContainer = document.querySelector(".cards");
   luishrd
   bigknell
 */
+
+const followersArray = [
+  "misskellymore", 
+  "aalvinlin", 
+  "debauchery1st", 
+  "Faisal1440", 
+  "GeorgeDav9"
+];
+
+followersArray.forEach(follower => {
+
+  axios.get(`https://api.github.com/users/${follower}`)
+  .then(response => {
+    console.log(response);
+    
+      const newUser = userCreator(response);
+      cardContainer.appendChild(newUser);
+  })
+  .catch (error => {
+    console.log(error);
+  });
+});
